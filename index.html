@@ -4,31 +4,38 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>صانع بطاقات المعايدة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa+Ink:wght@400;700&family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
     :root {
-      --bg: #f5f1ea;
-      --panel: rgba(255, 255, 255, 0.82);
-      --card: #fffefb;
-      --text: #201b17;
-      --muted: #70685f;
+      --bg: #f4f0ea;
+      --card: #fffdf9;
+      --text: #1e1b18;
+      --muted: #736b62;
       --gold: #c7a441;
-      --green: #64795d;
-      --rose: #bf8b96;
-      --line: rgba(95, 84, 71, 0.18);
-      --shadow: 0 20px 50px rgba(0, 0, 0, 0.11);
-      --ui-font: "SF Arabic", "SF Pro Text", "Geeza Pro", "Tahoma", "Arial", sans-serif;
+      --green: #69785a;
+      --green-deep: #3e4a34;
+      --rose: #b98690;
+      --shadow: 0 18px 45px rgba(0,0,0,.10);
+      --radius: 28px;
+      --panel: rgba(255,255,255,.78);
+      --line: rgba(103, 93, 80, .18);
+      --title-font: "Aref Ruqaa Ink", serif;
+      --body-font: "Cairo", sans-serif;
     }
 
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      font-family: var(--ui-font);
-      color: var(--text);
+      font-family: var(--body-font);
       background:
-        radial-gradient(circle at top right, rgba(199,164,65,.14), transparent 24%),
-        radial-gradient(circle at bottom left, rgba(100,121,93,.10), transparent 28%),
-        linear-gradient(135deg, #f7f2eb, #eef1eb 55%, #f9f6f0);
+        radial-gradient(circle at top right, rgba(199,164,65,.14), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(105,120,90,.10), transparent 30%),
+        linear-gradient(135deg, #f6f2ec, #eef1eb 58%, #f7f4ef);
+      color: var(--text);
       min-height: 100vh;
     }
 
@@ -46,81 +53,117 @@
     .preview-shell {
       background: var(--panel);
       backdrop-filter: blur(14px);
-      border: 1px solid rgba(255,255,255,.7);
+      border: 1px solid rgba(255,255,255,.65);
       box-shadow: var(--shadow);
       border-radius: 32px;
     }
 
     .panel {
-      position: sticky;
-      top: 16px;
       padding: 22px;
+      position: sticky;
+      top: 18px;
     }
 
     .preview-shell {
-      min-height: calc(100vh - 48px);
       padding: 24px;
+      min-height: calc(100vh - 48px);
       display: grid;
       place-items: center;
-      gap: 12px;
+    }
+
+    .panel-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      border-radius: 22px;
+      background: rgba(255,255,255,.90);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 22px rgba(0,0,0,.05);
+    }
+
+    .panel-brand-logo {
+      width: 74px;
+      height: 74px;
+      object-fit: contain;
+      border-radius: 18px;
+      background: #fff;
+      padding: 4px;
+      box-shadow: 0 10px 22px rgba(0,0,0,.08);
+      flex-shrink: 0;
+    }
+
+    .panel-brand-text {
+      min-width: 0;
+    }
+
+    .panel-brand-title {
+      font-size: 1.02rem;
+      font-weight: 900;
+      color: #2f2a25;
+      margin-bottom: 4px;
+    }
+
+    .panel-brand-subtitle {
+      font-size: .9rem;
+      color: var(--muted);
+      line-height: 1.75;
     }
 
     .app-title {
       margin: 0 0 6px;
       font-size: 1.95rem;
       font-weight: 900;
-      letter-spacing: -.4px;
+      letter-spacing: -.5px;
     }
 
     .app-subtitle {
       margin: 0 0 18px;
       color: var(--muted);
-      line-height: 1.9;
-      font-size: .97rem;
+      line-height: 1.8;
+      font-size: .98rem;
     }
 
-    .section-title {
-      margin: 18px 0 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 1rem;
-      font-weight: 900;
-      color: #342e29;
+    .row,
+    .preset-row {
+      display: grid;
+      gap: 12px;
     }
 
-    .section-title::before {
-      content: "";
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--gold), #ebd897);
-      box-shadow: 0 0 0 6px rgba(199,164,65,.12);
+    .row.two {
+      grid-template-columns: 1fr 1fr;
     }
 
-    .field { margin-bottom: 14px; }
+    .row.three {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
 
     .field label {
       display: block;
       margin-bottom: 7px;
       font-size: .96rem;
       font-weight: 800;
-      color: #403832;
+      color: #403a34;
     }
 
     .field input,
     .field select,
     .field textarea {
       width: 100%;
-      padding: 12px 14px;
-      border-radius: 16px;
       border: 1px solid var(--line);
-      background: rgba(255,255,255,.94);
+      background: rgba(255,255,255,.92);
+      border-radius: 16px;
+      padding: 12px 14px;
       font: inherit;
       color: var(--text);
       outline: none;
-      transition: .2s ease;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+      transition: .22s ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.65);
     }
 
     .field textarea {
@@ -133,56 +176,57 @@
     .field select:focus,
     .field textarea:focus {
       border-color: rgba(199,164,65,.55);
-      box-shadow: 0 0 0 4px rgba(199,164,65,.12);
+      box-shadow: 0 0 0 4px rgba(199,164,65,.13);
     }
 
-    .row.two,
-    .row.three,
-    .preset-row,
-    .actions {
-      display: grid;
-      gap: 12px;
+    .section-title {
+      font-size: 1rem;
+      font-weight: 900;
+      margin: 18px 0 12px;
+      color: #332f2b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .row.two { grid-template-columns: 1fr 1fr; }
-    .row.three { grid-template-columns: repeat(3, 1fr); }
-    .preset-row { grid-template-columns: repeat(2, 1fr); }
-    .actions { grid-template-columns: repeat(2, 1fr); margin-top: 16px; }
+    .section-title::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), #e8d596);
+      box-shadow: 0 0 0 6px rgba(199,164,65,.12);
+    }
+
+    .preset-row {
+      grid-template-columns: repeat(2, 1fr);
+      margin-bottom: 10px;
+    }
 
     .preset-btn,
     .action-btn,
     .chip {
       font: inherit;
-      border: 0;
       cursor: pointer;
+      border: 0;
       transition: .2s ease;
     }
 
-    .preset-btn,
-    .chip,
-    .action-btn.secondary {
+    .preset-btn {
+      padding: 12px 14px;
+      border-radius: 16px;
       background: rgba(255,255,255,.94);
       border: 1px solid var(--line);
-      color: #413931;
+      font-weight: 800;
+      color: #403931;
       box-shadow: 0 8px 20px rgba(0,0,0,.04);
     }
 
-    .preset-btn,
-    .action-btn {
-      padding: 13px 14px;
-      border-radius: 16px;
-      font-weight: 900;
-    }
-
-    .chip {
-      padding: 10px 14px;
-      border-radius: 999px;
-      font-weight: 800;
-    }
-
     .preset-btn:hover,
-    .action-btn:hover,
-    .chip:hover { transform: translateY(-1px); }
+    .chip:hover,
+    .action-btn:hover {
+      transform: translateY(-1px);
+    }
 
     .chips {
       display: flex;
@@ -190,16 +234,53 @@
       gap: 8px;
     }
 
+    .chip {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.92);
+      font-weight: 800;
+      color: #4b423a;
+    }
+
     .chip.active {
       background: linear-gradient(135deg, rgba(199,164,65,.18), rgba(255,255,255,1));
       border-color: rgba(199,164,65,.45);
-      color: #2d261f;
+      color: #2c251e;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .action-btn {
+      padding: 14px 16px;
+      border-radius: 18px;
+      font-weight: 900;
+      border: 1px solid transparent;
+      letter-spacing: -.2px;
     }
 
     .action-btn.primary {
-      background: linear-gradient(135deg, #42523c, #71836a);
+      background: linear-gradient(135deg, var(--green-deep), var(--green));
       color: #fff;
-      box-shadow: 0 14px 26px rgba(66,82,60,.22);
+      box-shadow: 0 16px 26px rgba(62,74,52,.20);
+    }
+
+    .action-btn.secondary {
+      background: rgba(255,255,255,.95);
+      color: #3e3933;
+      border-color: var(--line);
+    }
+
+    .hint {
+      margin-top: 12px;
+      font-size: .88rem;
+      color: #726b63;
+      line-height: 1.8;
     }
 
     .toggle {
@@ -218,45 +299,356 @@
     .toggle input {
       width: 18px;
       height: 18px;
-      accent-color: #42523c;
+      accent-color: var(--green-deep);
       cursor: pointer;
     }
 
-    .range-wrap {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .range-wrap input[type="range"] {
-      width: 100%;
-      accent-color: #42523c;
-    }
-
-    .range-value {
-      min-width: 56px;
-      padding: 8px 10px;
-      text-align: center;
-      background: rgba(255,255,255,.94);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      font-weight: 900;
-      color: #4a423b;
-    }
-
-    .file-note,
-    .hint {
-      color: #786f66;
-      font-size: .88rem;
-      line-height: 1.85;
+    .file-note {
+      margin-top: 6px;
+      color: #81786f;
+      font-size: .85rem;
     }
 
     .preview-wrap {
-      width: min(100%, 430px);
+      width: min(100%, 420px);
       display: grid;
       gap: 12px;
       justify-items: center;
+    }
+
+    .preview-caption {
+      color: #5f564c;
+      font-weight: 800;
+      font-size: .95rem;
+    }
+
+    .card {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      border-radius: 34px;
+      overflow: hidden;
+      background: var(--card);
+      box-shadow: 0 28px 60px rgba(26,20,13,.16);
+      isolation: isolate;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 26px 24px 28px;
+    }
+
+    .card::before,
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: auto;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .style-floral {
+      background:
+        radial-gradient(circle at 15% 16%, rgba(114, 128, 94, .16), transparent 17%),
+        radial-gradient(circle at 20% 10%, rgba(199,164,65,.13), transparent 11%),
+        radial-gradient(circle at 88% 87%, rgba(114, 128, 94, .14), transparent 16%),
+        radial-gradient(circle at 80% 92%, rgba(199,164,65,.11), transparent 10%),
+        linear-gradient(180deg, #fdfcf9, #f7f5f0 55%, #f8f5f1);
+    }
+
+    .style-floral::before {
+      top: -22px;
+      left: -12px;
+      width: 84%;
+      height: 28%;
+      background:
+        radial-gradient(circle at 8% 35%, rgba(83, 103, 75, .22) 0 8%, transparent 9%),
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,.96) 0 10%, transparent 11%),
+        radial-gradient(circle at 30% 17%, rgba(91, 113, 82, .18) 0 8%, transparent 9%),
+        radial-gradient(circle at 38% 31%, rgba(255,255,255,.95) 0 12%, transparent 13%),
+        radial-gradient(circle at 54% 20%, rgba(101, 121, 89, .20) 0 9%, transparent 10%),
+        radial-gradient(circle at 58% 34%, rgba(255,255,255,.96) 0 11%, transparent 12%),
+        radial-gradient(circle at 74% 23%, rgba(111, 126, 95, .18) 0 7%, transparent 8%),
+        radial-gradient(circle at 80% 38%, rgba(255,255,255,.96) 0 9%, transparent 10%);
+      filter: blur(1px);
+      opacity: .96;
+    }
+
+    .style-floral::after {
+      bottom: -12px;
+      right: -10px;
+      width: 46%;
+      height: 18%;
+      background:
+        radial-gradient(circle at 18% 44%, rgba(91,112,82,.25) 0 10%, transparent 11%),
+        radial-gradient(circle at 40% 32%, rgba(255,255,255,.94) 0 10%, transparent 11%),
+        radial-gradient(circle at 58% 48%, rgba(96,114,87,.20) 0 8%, transparent 9%),
+        radial-gradient(circle at 76% 24%, rgba(255,255,255,.95) 0 11%, transparent 12%);
+      opacity: .9;
+    }
+
+    .style-islamic {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,.18), transparent 24%),
+        linear-gradient(180deg, #173527 0%, #1d4331 42%, #234936 100%);
+      color: #fff;
+    }
+
+    .style-islamic::before {
+      top: -10%;
+      left: -14%;
+      width: 48%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      box-shadow: 0 0 0 14px rgba(230,208,134,.14), 0 0 0 32px rgba(230,208,134,.06);
+      background: transparent;
+      border: 10px solid rgba(236,215,146,.86);
+      clip-path: inset(0 22% 0 0);
+      transform: rotate(6deg);
+      opacity: .95;
+    }
+
+    .style-islamic::after {
+      bottom: -9%;
+      right: -8%;
+      width: 52%;
+      height: 26%;
+      background:
+        radial-gradient(circle at 12% 60%, rgba(236,215,146,.28) 0 10%, transparent 11%),
+        radial-gradient(circle at 32% 40%, rgba(236,215,146,.18) 0 7%, transparent 8%),
+        radial-gradient(circle at 62% 62%, rgba(236,215,146,.14) 0 8%, transparent 9%);
+      opacity: .9;
+    }
+
+    .style-kids {
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255, 209, 102, .27), transparent 14%),
+        radial-gradient(circle at 86% 12%, rgba(149, 210, 179, .26), transparent 16%),
+        radial-gradient(circle at 14% 84%, rgba(255, 183, 197, .26), transparent 15%),
+        radial-gradient(circle at 84% 82%, rgba(166, 202, 240, .30), transparent 18%),
+        linear-gradient(180deg, #fff9ef, #fefefe);
+    }
+
+    .style-kids::before {
+      inset: 0;
+      background:
+        radial-gradient(circle at 12% 14%, rgba(255,255,255,.9) 0 1.2%, transparent 1.3%),
+        radial-gradient(circle at 80% 18%, rgba(255,255,255,.96) 0 1%, transparent 1.1%),
+        radial-gradient(circle at 22% 76%, rgba(255,255,255,.95) 0 1.1%, transparent 1.2%),
+        radial-gradient(circle at 68% 82%, rgba(255,255,255,.96) 0 1.2%, transparent 1.3%),
+        radial-gradient(circle at 56% 23%, rgba(255,255,255,.92) 0 0.9%, transparent 1%),
+        radial-gradient(circle at 34% 43%, rgba(255,255,255,.95) 0 1.1%, transparent 1.2%);
+      opacity: .7;
+    }
+
+    .style-minimal {
+      background:
+        linear-gradient(180deg, #fffefa, #fbf8f2);
+    }
+
+    .style-minimal::before {
+      top: 26px;
+      left: 26px;
+      right: 26px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(199,164,65,.55), transparent);
+      opacity: .75;
+    }
+
+    .style-minimal::after {
+      bottom: 26px;
+      left: 26px;
+      right: 26px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(199,164,65,.55), transparent);
+      opacity: .75;
+    }
+
+    .card-inner {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+    }
+
+    .brand-logo {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      width: 62px;
+      height: 62px;
+      border-radius: 16px;
+      object-fit: cover;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(255,255,255,.75);
+      box-shadow: 0 12px 24px rgba(0,0,0,.08);
+      display: none;
+      z-index: 2;
+    }
+
+    .ornaments {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: .9;
+    }
+
+    .ornaments .spark {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(199,164,65,.75);
+      box-shadow: 0 0 0 6px rgba(199,164,65,.05);
+    }
+
+    .ornaments .spark:nth-child(1) { top: 19%; right: 18%; }
+    .ornaments .spark:nth-child(2) { top: 24%; left: 16%; width: 5px; height: 5px; }
+    .ornaments .spark:nth-child(3) { bottom: 21%; left: 19%; width: 6px; height: 6px; }
+    .ornaments .spark:nth-child(4) { bottom: 14%; right: 16%; width: 4px; height: 4px; }
+    .ornaments .spark:nth-child(5) { top: 13%; right: 33%; width: 4px; height: 4px; }
+
+    .top-space {
+      min-height: 27%;
+    }
+
+    .center-content {
+      padding: 0 10px;
+      display: grid;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .main-title {
+      margin: 0;
+      font-family: var(--title-font);
+      font-size: clamp(2.3rem, 7vw, 4rem);
+      line-height: 1.08;
+      font-weight: 700;
+      letter-spacing: .2px;
+      position: relative;
+      color: var(--text);
+      display: inline-block;
+      justify-self: center;
+      padding: 0 8px;
+      text-shadow: 0 3px 0 rgba(255,255,255,.33);
+    }
+
+    .main-title::before,
+    .main-title::after {
+      content: "";
+      position: absolute;
+      width: 38px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      top: 50%;
+      transform: translateY(-50%) rotate(-26deg);
+      border-radius: 999px;
+      opacity: .9;
+    }
+
+    .main-title::before { right: -18px; }
+    .main-title::after { left: -18px; transform: translateY(-50%) rotate(26deg); }
+
+    .subtitle {
+      margin: 0;
+      font-size: clamp(1.1rem, 2.7vw, 1.55rem);
+      line-height: 1.9;
+      font-weight: 900;
+      color: var(--gold);
+      white-space: pre-line;
+    }
+
+    .body-text {
+      margin: 0;
+      font-size: clamp(1rem, 2.4vw, 1.35rem);
+      line-height: 1.95;
+      font-weight: 800;
+      white-space: pre-line;
+      color: var(--text);
+    }
+
+    .name-frame {
+      justify-self: center;
+      min-width: 54%;
+      max-width: 88%;
+      padding: 12px 26px;
+      border-radius: 16px;
+      border: 2px solid rgba(199,164,65,.82);
+      color: #54462a;
+      font-weight: 900;
+      font-size: 1.1rem;
+      background: linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,.2));
+      box-shadow: inset 0 0 0 3px rgba(255,255,255,.68);
+      position: relative;
+      display: none;
+    }
+
+    .name-frame::before,
+    .name-frame::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(199,164,65,.82);
+      transform: translateY(-50%) rotate(45deg);
+      background: transparent;
+    }
+
+    .name-frame::before { right: -9px; }
+    .name-frame::after { left: -9px; }
+
+    .closing {
+      margin: 0;
+      font-family: var(--title-font);
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.35;
+    }
+
+    .footer-note {
+      margin-top: 10px;
+      font-size: .92rem;
+      font-weight: 700;
+      color: rgba(50,45,39,.75);
+      white-space: pre-line;
+      line-height: 1.8;
+    }
+
+    .style-islamic .main-title,
+    .style-islamic .body-text,
+    .style-islamic .closing {
+      color: #fffdf7;
+      text-shadow: none;
+    }
+
+    .style-islamic .subtitle {
+      color: #f2dc9a;
+    }
+
+    .style-islamic .name-frame {
+      color: #fff7df;
+      background: rgba(255,255,255,.06);
+      box-shadow: inset 0 0 0 3px rgba(255,255,255,.08);
+      border-color: rgba(242,220,154,.88);
+    }
+
+    .style-islamic .name-frame::before,
+    .style-islamic .name-frame::after {
+      border-color: rgba(242,220,154,.88);
+    }
+
+    .style-islamic .footer-note {
+      color: rgba(255,255,255,.72);
+    }
+
+    .style-kids .main-title {
+      text-shadow: none;
     }
 
     .mini-toolbar {
@@ -268,33 +660,56 @@
 
     .mini-badge {
       padding: 9px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.92);
+      background: rgba(255,255,255,.88);
       border: 1px solid rgba(0,0,0,.06);
-      color: #61584f;
+      border-radius: 999px;
+      color: #5d554d;
       font-size: .88rem;
       font-weight: 800;
     }
 
-    .preview-caption {
+    .range-wrap {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .range-wrap input[type="range"] {
+      width: 100%;
+      accent-color: var(--green-deep);
+    }
+
+    .range-value {
+      font-weight: 900;
+      color: #4b433b;
+      min-width: 50px;
+      text-align: center;
+      background: rgba(255,255,255,.92);
+      border-radius: 12px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+    }
+
+    .app-footer {
+      max-width: 1500px;
+      margin: -4px auto 24px;
+      padding: 0 24px 24px;
+      text-align: center;
+    }
+
+    .app-footer span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.82);
+      border: 1px solid rgba(255,255,255,.7);
+      box-shadow: var(--shadow);
       color: #5f564c;
+      font-weight: 900;
       font-size: .95rem;
-      font-weight: 800;
-    }
-
-    .svg-stage {
-      width: 100%;
-      aspect-ratio: 9 / 16;
-      border-radius: 34px;
-      overflow: hidden;
-      box-shadow: 0 26px 60px rgba(20, 16, 12, 0.16);
-      background: #fff;
-    }
-
-    .svg-stage svg {
-      display: block;
-      width: 100%;
-      height: 100%;
     }
 
     @media (max-width: 1120px) {
@@ -319,8 +734,8 @@
 
       .panel,
       .preview-shell {
-        padding: 16px;
         border-radius: 24px;
+        padding: 16px;
       }
 
       .row.two,
@@ -331,7 +746,16 @@
       }
 
       .app-title {
-        font-size: 1.7rem;
+        font-size: 1.65rem;
+      }
+
+      .panel-brand {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .panel-brand-text {
+        text-align: center;
       }
     }
   </style>
@@ -339,9 +763,18 @@
 <body>
   <div class="app">
     <aside class="panel">
+
+      <div class="panel-brand">
+        <img class="panel-brand-logo" src="logo.png" alt="شعار ملتقى التعليم التفاعلي">
+        <div class="panel-brand-text">
+          <div class="panel-brand-title">ملتقى التعليم التفاعلي</div>
+          <div class="panel-brand-subtitle">تصميم وفكرة التطبيق ضمن هوية تعليمية تفاعلية أنيقة.</div>
+        </div>
+      </div>
+
       <h1 class="app-title">صانع بطاقات المعايدة</h1>
       <p class="app-subtitle">
-        عدّل النصوص والقالب والألوان، ثم نزّل البطاقة مباشرة كصورة أو ملف SVG. هذه النسخة تعمل محليًا داخل المعاينة ولا تطلب تحميل خطوط أو مكتبات من الإنترنت.
+        أنشئ بطاقة أنيقة خلال ثوانٍ، ثم عدّل النص والقالب والألوان، ونزّلها مباشرةً كصورة جاهزة للإرسال.
       </p>
 
       <div class="section-title">قوالب جاهزة</div>
@@ -399,11 +832,10 @@
 
       <div class="row two">
         <div class="field">
-          <label for="fontSelect">طابع الخط</label>
+          <label for="fontSelect">خط النص</label>
           <select id="fontSelect">
-            <option value="soft" selected>ناعم</option>
-            <option value="clear">واضح</option>
-            <option value="formal">رسمي</option>
+            <option value="Cairo" selected>القاهرة</option>
+            <option value="Tajawal">تجوال</option>
           </select>
         </div>
         <div class="field">
@@ -431,40 +863,69 @@
 
       <label class="toggle">
         <input id="showDots" type="checkbox" checked>
-        <span>أظهر الزخارف الصغيرة</span>
+        <span>أظهر الزخارف الذهبية الصغيرة</span>
       </label>
 
       <div class="field">
         <label for="logoUpload">أضف شعارًا أو صورة صغيرة</label>
         <input id="logoUpload" type="file" accept="image/*">
-        <div class="file-note">ستظهر الصورة داخل البطاقة من الأعلى، وتبقى محلية دون أي طلب شبكة.</div>
+        <div class="file-note">ستظهر الصورة في أعلى البطاقة من الداخل.</div>
       </div>
 
       <div class="actions">
-        <button class="action-btn primary" id="downloadPngBtn">نزّل PNG</button>
-        <button class="action-btn secondary" id="downloadSvgBtn">نزّل SVG</button>
+        <button class="action-btn primary" id="downloadBtn">نزّل البطاقة</button>
         <button class="action-btn secondary" id="copyBtn">انسخ النص</button>
         <button class="action-btn secondary" id="resetBtn">إعادة الضبط</button>
         <button class="action-btn secondary" id="randomBtn">جرّب صياغة جديدة</button>
       </div>
 
       <p class="hint">
-        هذه النسخة لا تعتمد على خطوط Google ولا على مكتبات خارجية؛ لذلك لن تظهر لك نافذة طلب السماح للشبكة بسبب الخطوط.
+        ملاحظة: بعد التعديل، اضغط <strong>نزّل البطاقة</strong> لتحصل على صورة جاهزة للمشاركة عبر الجوال أو الواتساب.
       </p>
     </aside>
 
     <section class="preview-shell">
       <div class="preview-wrap">
         <div class="mini-toolbar">
-          <div class="mini-badge">يعمل محليًا</div>
-          <div class="mini-badge">بدون خطوط خارجية</div>
-          <div class="mini-badge">تنزيل مباشر</div>
+          <div class="mini-badge">جاهز للتحميل</div>
+          <div class="mini-badge">يدعم العربية</div>
+          <div class="mini-badge">تعديل مباشر</div>
         </div>
         <div class="preview-caption">معاينة مباشرة للبطاقة</div>
-        <div class="svg-stage" id="svgStage"></div>
+
+        <div class="card style-floral" id="card">
+          <img class="brand-logo" id="brandLogo" alt="logo">
+          <div class="ornaments" id="ornaments">
+            <span class="spark"></span>
+            <span class="spark"></span>
+            <span class="spark"></span>
+            <span class="spark"></span>
+            <span class="spark"></span>
+          </div>
+
+          <div class="card-inner">
+            <div class="top-space"></div>
+
+            <div class="center-content">
+              <h2 class="main-title" id="previewTitle">عيد سعيد</h2>
+              <p class="subtitle" id="previewSubtitle">كل عام وأنت بخير<br>بمناسبة عيد الفطر المبارك!</p>
+              <p class="body-text" id="previewBody">أعاده الله عليك باليمن والبركات<br>وتقبل الله طاعاتك</p>
+              <div class="name-frame" id="previewRecipient">اسم المهدى إليه</div>
+            </div>
+
+            <div>
+              <p class="closing" id="previewClosing">كل عام وأنت بخير</p>
+              <div class="footer-note" id="previewFooter">مع أطيب الأمنيات</div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </div>
+
+  <footer class="app-footer">
+    <span>أ/ فاطمة هزازي، ملتقى التعليم التفاعلي</span>
+  </footer>
 
   <script>
     const el = {
@@ -481,33 +942,21 @@
       showFrame: document.getElementById('showFrame'),
       showDots: document.getElementById('showDots'),
       logoUpload: document.getElementById('logoUpload'),
-      downloadPngBtn: document.getElementById('downloadPngBtn'),
-      downloadSvgBtn: document.getElementById('downloadSvgBtn'),
+      brandLogo: document.getElementById('brandLogo'),
+      card: document.getElementById('card'),
+      ornaments: document.getElementById('ornaments'),
+      previewTitle: document.getElementById('previewTitle'),
+      previewSubtitle: document.getElementById('previewSubtitle'),
+      previewBody: document.getElementById('previewBody'),
+      previewRecipient: document.getElementById('previewRecipient'),
+      previewClosing: document.getElementById('previewClosing'),
+      previewFooter: document.getElementById('previewFooter'),
+      downloadBtn: document.getElementById('downloadBtn'),
       copyBtn: document.getElementById('copyBtn'),
       resetBtn: document.getElementById('resetBtn'),
       randomBtn: document.getElementById('randomBtn'),
-      svgStage: document.getElementById('svgStage'),
       styleChips: [...document.querySelectorAll('#styleChips .chip')],
       presetBtns: [...document.querySelectorAll('[data-preset]')],
-    };
-
-    const fontMap = {
-      soft: 'Geeza Pro, Tahoma, Arial, sans-serif',
-      clear: 'Tahoma, Arial, sans-serif',
-      formal: 'Times New Roman, Geeza Pro, serif'
-    };
-
-    const accents = {
-      gold: { primary: '#c7a441', secondary: '#66795e', soft: '#f1e6c5' },
-      green: { primary: '#6d926f', secondary: '#4f6750', soft: '#d9e8da' },
-      rose: { primary: '#c78f9a', secondary: '#7e666d', soft: '#f3dde2' }
-    };
-
-    const themes = {
-      floral: { bg1: '#fffefb', bg2: '#f3efe7', ink: '#1f1a16', softInk: '#60584f', decoA: '#72815f', decoB: '#4d5942' },
-      islamic: { bg1: '#1c3b2c', bg2: '#244b37', ink: '#fffdf7', softInk: 'rgba(255,255,255,.78)', decoA: '#eed48c', decoB: '#f6e7bf' },
-      kids: { bg1: '#fff7ed', bg2: '#fffdfb', ink: '#2a2420', softInk: '#665d55', decoA: '#9cd0bb', decoB: '#ffd484' },
-      minimal: { bg1: '#fffefa', bg2: '#f7f3ec', ink: '#1f1b17', softInk: '#635b53', decoA: '#e7ddc3', decoB: '#d1c3a0' }
     };
 
     const presets = {
@@ -554,125 +1003,88 @@
     };
 
     const randomTexts = [
-      { title: 'عيدكم فرح', subtitle: 'تهنئة مفعمة بالمحبة\nوبأجمل الدعوات', body: 'أسأل الله أن يجعل أيامك أعيادًا\nوأن يرزقك السعادة والطمأنينة', closing: 'عيدك بهجة', footer: 'محبة صادقة' },
-      { title: 'مبارك عليك العيد', subtitle: 'في هذا اليوم المبارك\nأبعث لك أجمل التهاني', body: 'أعاده الله عليك أعوامًا مديدة\nوأنت في صحة وعافية وسرور', closing: 'كل عام وأنت أسعد', footer: 'من القلب إلى القلب' },
-      { title: 'تهنئة محبة', subtitle: 'رسالة صغيرة\nتحمل دعوات كبيرة', body: 'أسأل الله أن يكتب لك من الخير أوفره\nومن الفرح أجمله', closing: 'دمت في رعاية الله', footer: 'بأجمل الأمنيات' }
+      {
+        title: 'عيدكم فرح',
+        subtitle: 'تهنئة مفعمة بالمحبة\nوبأجمل الدعوات',
+        body: 'أسأل الله أن يجعل أيامك أعيادًا\nوأن يرزقك السعادة والطمأنينة',
+        closing: 'عيدك بهجة',
+        footer: 'محبة صادقة'
+      },
+      {
+        title: 'مبارك عليك العيد',
+        subtitle: 'في هذا اليوم المبارك\nأبعث لك أجمل التهاني',
+        body: 'أعاده الله عليك أعوامًا مديدة\nوأنت في صحة وعافية وسرور',
+        closing: 'كل عام وأنت أسعد',
+        footer: 'من القلب إلى القلب'
+      },
+      {
+        title: 'تهنئة محبة',
+        subtitle: 'رسالة صغيرة\nتحمل دعوات كبيرة',
+        body: 'أسأل الله أن يكتب لك من الخير أوفره\nومن الفرح أجمله',
+        closing: 'دمت في رعاية الله',
+        footer: 'بأجمل الأمنيات'
+      }
     ];
 
-    const state = { style: 'floral', logo: '' };
+    const state = {
+      style: 'floral',
+      logo: ''
+    };
 
-    function escapeXml(value) {
-      return String(value ?? '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/\"/g, '&quot;')
-        .replace(/'/g, '&apos;');
+    function nl2br(text) {
+      return (text || '').replace(/\n/g, '<br>');
     }
 
-    function wrapParagraph(text, maxChars) {
-      const sourceLines = String(text || '').split(/\n/);
-      const output = [];
-      sourceLines.forEach((line) => {
-        const clean = line.trim();
-        if (!clean) {
-          output.push('');
-          return;
-        }
-        const words = clean.split(/\s+/);
-        let current = '';
-        words.forEach((word) => {
-          const next = current ? `${current} ${word}` : word;
-          if (next.length <= maxChars) {
-            current = next;
-          } else {
-            if (current) output.push(current);
-            current = word;
-          }
-        });
-        if (current) output.push(current);
-      });
-      return output;
-    }
-
-    function textBlock(lines, x, y, options = {}) {
-      const { size = 42, weight = 700, fill = '#111', lineHeight = 1.45, family = fontMap.soft, opacity = 1 } = options;
-      const dy = Math.round(size * lineHeight);
-      const items = lines.map((line, index) => {
-        const safe = line === '' ? ' ' : escapeXml(line);
-        return `<tspan x="${x}" dy="${index === 0 ? 0 : dy}">${safe}</tspan>`;
-      }).join('');
-      return `<text x="${x}" y="${y}" text-anchor="middle" direction="rtl" unicode-bidi="plaintext" font-family="${family}" font-size="${size}" font-weight="${weight}" fill="${fill}" opacity="${opacity}">${items}</text>`;
-    }
-
-    function buildSparkles(accent) {
-      if (!el.showDots.checked) return '';
-      return `<g opacity=".9"><circle cx="165" cy="350" r="7" fill="${accent.primary}" /><circle cx="742" cy="420" r="6" fill="${accent.primary}" /><circle cx="226" cy="1330" r="5" fill="${accent.primary}" /><circle cx="712" cy="1245" r="4" fill="${accent.primary}" /><circle cx="640" cy="245" r="4" fill="${accent.primary}" /><circle cx="318" cy="228" r="3" fill="${accent.primary}" /><circle cx="765" cy="1360" r="3" fill="${accent.primary}" /></g>`;
-    }
-
-    function floralDecor(theme, accent) {
-      return `<g opacity=".98"><g transform="translate(42,30)"><ellipse cx="55" cy="78" rx="34" ry="68" fill="${theme.decoA}" transform="rotate(-34 55 78)" opacity=".88"/><ellipse cx="130" cy="52" rx="30" ry="64" fill="${theme.decoB}" transform="rotate(18 130 52)" opacity=".9"/><ellipse cx="208" cy="70" rx="29" ry="58" fill="${theme.decoA}" transform="rotate(38 208 70)" opacity=".85"/><ellipse cx="298" cy="84" rx="27" ry="56" fill="${theme.decoB}" transform="rotate(-18 298 84)" opacity=".86"/><circle cx="96" cy="110" r="54" fill="#fffdf7" stroke="${accent.soft}" stroke-width="8"/><circle cx="96" cy="110" r="18" fill="${accent.soft}" opacity=".8"/><circle cx="198" cy="128" r="58" fill="#fffefb" stroke="${accent.soft}" stroke-width="8"/><circle cx="198" cy="128" r="18" fill="${accent.soft}" opacity=".8"/><circle cx="293" cy="102" r="44" fill="#fffefb" stroke="${accent.soft}" stroke-width="8"/><circle cx="293" cy="102" r="14" fill="${accent.soft}" opacity=".8"/><circle cx="28" cy="140" r="26" fill="#fffefb" stroke="${accent.soft}" stroke-width="6" opacity=".94"/><circle cx="358" cy="54" r="24" fill="#fffefb" stroke="${accent.soft}" stroke-width="6" opacity=".94"/></g><g transform="translate(594,1258) scale(.86)"><ellipse cx="60" cy="90" rx="30" ry="56" fill="${theme.decoA}" transform="rotate(-30 60 90)" opacity=".88"/><ellipse cx="134" cy="62" rx="28" ry="54" fill="${theme.decoB}" transform="rotate(20 134 62)" opacity=".9"/><ellipse cx="206" cy="86" rx="24" ry="48" fill="${theme.decoA}" transform="rotate(36 206 86)" opacity=".82"/><circle cx="110" cy="118" r="34" fill="#fffefb" stroke="${accent.soft}" stroke-width="6"/><circle cx="110" cy="118" r="11" fill="${accent.soft}" opacity=".8"/><circle cx="208" cy="110" r="24" fill="#fffefb" stroke="${accent.soft}" stroke-width="5"/></g></g>`;
-    }
-
-    function islamicDecor(theme, accent) {
-      return `<g><circle cx="160" cy="126" r="84" fill="none" stroke="${theme.decoA}" stroke-width="16" opacity=".95"/><circle cx="188" cy="110" r="84" fill="${theme.bg1}" /><g transform="translate(640,64)"><line x1="50" y1="0" x2="50" y2="115" stroke="${theme.decoB}" stroke-width="5" stroke-linecap="round"/><rect x="18" y="114" width="64" height="98" rx="16" fill="rgba(255,255,255,.07)" stroke="${theme.decoB}" stroke-width="4"/><circle cx="50" cy="152" r="14" fill="${theme.decoB}" opacity=".85"/></g><g transform="translate(720,150)"><line x1="38" y1="0" x2="38" y2="82" stroke="${theme.decoB}" stroke-width="4" stroke-linecap="round"/><rect x="14" y="82" width="48" height="74" rx="12" fill="rgba(255,255,255,.06)" stroke="${theme.decoB}" stroke-width="3.5"/></g><g opacity=".38"><path d="M85 1268 C210 1186 330 1186 450 1268" fill="none" stroke="${accent.primary}" stroke-width="2.5"/><path d="M124 1318 C255 1238 646 1238 777 1318" fill="none" stroke="${accent.primary}" stroke-width="2"/></g></g>`;
-    }
-
-    function kidsDecor(theme, accent) {
-      return `<g opacity=".95"><circle cx="120" cy="116" r="52" fill="#ffd98a" opacity=".72"/><circle cx="756" cy="124" r="58" fill="#a7d7c0" opacity=".74"/><circle cx="104" cy="1436" r="48" fill="#ffd4df" opacity=".76"/><circle cx="790" cy="1412" r="56" fill="#c8ddff" opacity=".72"/><path d="M150 184 l16 34 38 4-28 24 8 36-34-18-34 18 8-36-28-24 38-4z" fill="${accent.primary}" opacity=".62"/><path d="M744 248 l12 28 30 3-22 20 6 30-26-14-26 14 6-30-22-20 30-3z" fill="${accent.primary}" opacity=".55"/><path d="M710 1290 l12 28 30 3-22 20 6 30-26-14-26 14 6-30-22-20 30-3z" fill="${accent.primary}" opacity=".52"/><circle cx="245" cy="228" r="11" fill="#ffffff" opacity=".88"/><circle cx="670" cy="180" r="9" fill="#ffffff" opacity=".82"/></g>`;
-    }
-
-    function minimalDecor(theme, accent) {
-      return `<g opacity=".82"><line x1="120" y1="96" x2="780" y2="96" stroke="${accent.primary}" stroke-width="2.5"/><line x1="120" y1="1504" x2="780" y2="1504" stroke="${accent.primary}" stroke-width="2.5"/><circle cx="450" cy="96" r="8" fill="${accent.primary}"/><circle cx="450" cy="1504" r="8" fill="${accent.primary}"/></g>`;
-    }
-
-    function getDecorations(style, theme, accent) {
-      if (style === 'islamic') return islamicDecor(theme, accent);
-      if (style === 'kids') return kidsDecor(theme, accent);
-      if (style === 'minimal') return minimalDecor(theme, accent);
-      return floralDecor(theme, accent);
+    function setAccent(accent) {
+      const root = document.documentElement;
+      if (accent === 'green') {
+        root.style.setProperty('--gold', '#5f8b66');
+        root.style.setProperty('--green', '#6f8f73');
+        root.style.setProperty('--rose', '#a3b49b');
+      } else if (accent === 'rose') {
+        root.style.setProperty('--gold', '#c98c97');
+        root.style.setProperty('--green', '#8a7e74');
+        root.style.setProperty('--rose', '#d6a0aa');
+      } else {
+        root.style.setProperty('--gold', '#c7a441');
+        root.style.setProperty('--green', '#69785a');
+        root.style.setProperty('--rose', '#b98690');
+      }
     }
 
     function setStyle(style) {
       state.style = style;
-      el.styleChips.forEach((chip) => chip.classList.toggle('active', chip.dataset.style === style));
-      renderCard();
+      el.card.className = `card style-${style}`;
+      el.styleChips.forEach(chip => chip.classList.toggle('active', chip.dataset.style === style));
     }
 
-    function setAccentTheme() {
-      const accent = accents[el.accentSelect.value];
-      document.documentElement.style.setProperty('--gold', accent.primary);
-      document.documentElement.style.setProperty('--green', accent.secondary);
-      document.documentElement.style.setProperty('--rose', accent.soft);
-    }
+    function updatePreview() {
+      el.previewTitle.textContent = el.titleInput.value || 'عنوان البطاقة';
+      el.previewSubtitle.innerHTML = nl2br(el.subtitleInput.value || 'أضف سطرًا جميلًا هنا');
+      el.previewBody.innerHTML = nl2br(el.bodyInput.value || 'اكتب نص المعايدة');
+      el.previewClosing.textContent = el.closingInput.value || 'كل عام وأنت بخير';
+      el.previewFooter.textContent = el.footerInput.value || '';
 
-    function buildSvg() {
-      const theme = themes[state.style];
-      const accent = accents[el.accentSelect.value];
-      const fontFamily = fontMap[el.fontSelect.value] || fontMap.soft;
-      const titleScale = Number(el.titleSize.value) / 100;
-      const titleLines = wrapParagraph(el.titleInput.value || 'عيد سعيد', 12).slice(0, 2);
-      const subtitleLines = wrapParagraph(el.subtitleInput.value || '', 22).slice(0, 3);
-      const bodyLines = wrapParagraph(el.bodyInput.value || '', 25).slice(0, 4);
-      const closingLines = wrapParagraph(el.closingInput.value || '', 18).slice(0, 2);
-      const footerLines = wrapParagraph(el.footerInput.value || '', 28).slice(0, 2);
-      const rawRecipient = el.recipientInput.value.trim();
-      const recipientText = rawRecipient || 'اسم المهدى إليه';
-      const showRecipient = el.showFrame.checked;
-      const recipientOpacity = rawRecipient ? 1 : .5;
-      const titleSize = Math.round(76 * titleScale);
-      const subtitleSize = state.style === 'islamic' ? 46 : 44;
-      const bodySize = 40;
-      const closingSize = state.style === 'kids' ? 56 : 60;
-      const footerSize = 25;
-      const logoMarkup = state.logo ? `<defs><clipPath id="logoClip"><rect x="0" y="0" width="110" height="110" rx="24" ry="24" /></clipPath></defs><g transform="translate(68,76)"><rect x="0" y="0" width="110" height="110" rx="24" fill="rgba(255,255,255,.78)" stroke="rgba(255,255,255,.82)" /><image href="${state.logo}" x="0" y="0" width="110" height="110" preserveAspectRatio="xMidYMid slice" clip-path="url(#logoClip)" /></g>` : '';
-      const recipientMarkup = showRecipient ? `<g opacity="${recipientOpacity}"><rect x="225" y="1090" width="450" height="92" rx="24" fill="rgba(255,255,255,.18)" stroke="${accent.primary}" stroke-width="4" /><path d="M214 1136 l18 -18 l18 18 l-18 18 z" fill="none" stroke="${accent.primary}" stroke-width="4" /><path d="M686 1136 l18 -18 l18 18 l-18 18 z" fill="none" stroke="${accent.primary}" stroke-width="4" />${textBlock([recipientText], 450, 1147, { size: 34, weight: 800, fill: state.style === 'islamic' ? '#fff7de' : '#56492e', family: fontFamily })}</g>` : '';
-      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1600" aria-label="بطاقة معايدة"><defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${theme.bg1}" /><stop offset="100%" stop-color="${theme.bg2}" /></linearGradient><radialGradient id="glowA" cx="0.15" cy="0.08" r="0.55"><stop offset="0%" stop-color="rgba(255,255,255,.45)" /><stop offset="100%" stop-color="rgba(255,255,255,0)" /></radialGradient></defs><rect width="900" height="1600" rx="68" fill="url(#bg)" /><rect x="0" y="0" width="900" height="1600" rx="68" fill="url(#glowA)" opacity=".55" />${getDecorations(state.style, theme, accent)}${buildSparkles(accent)}${logoMarkup}<g opacity=".92"><line x1="290" y1="546" x2="350" y2="512" stroke="${accent.primary}" stroke-width="6" stroke-linecap="round"/><line x1="610" y1="546" x2="550" y2="512" stroke="${accent.primary}" stroke-width="6" stroke-linecap="round"/></g>${textBlock(titleLines, 450, 520, { size: titleSize, weight: 900, fill: theme.ink, family: fontFamily, lineHeight: 1.12 })}${textBlock(subtitleLines, 450, 790, { size: subtitleSize, weight: 900, fill: accent.primary, family: fontFamily, lineHeight: 1.42 })}${textBlock(bodyLines, 450, 925, { size: bodySize, weight: 800, fill: theme.ink, family: fontFamily, lineHeight: 1.55 })}${recipientMarkup}${textBlock(closingLines, 450, 1340, { size: closingSize, weight: 900, fill: theme.ink, family: fontFamily, lineHeight: 1.25 })}${textBlock(footerLines, 450, 1458, { size: footerSize, weight: 700, fill: theme.softInk, family: fontFamily, lineHeight: 1.4 })}</svg>`;
-    }
+      const recipient = el.recipientInput.value.trim();
+      if (el.showFrame.checked && recipient) {
+        el.previewRecipient.style.display = 'inline-block';
+        el.previewRecipient.textContent = recipient;
+      } else if (el.showFrame.checked && !recipient) {
+        el.previewRecipient.style.display = 'inline-block';
+        el.previewRecipient.textContent = 'اسم المهدى إليه';
+        el.previewRecipient.style.opacity = '.55';
+      } else {
+        el.previewRecipient.style.display = 'none';
+      }
 
-    function renderCard() {
+      if (recipient) {
+        el.previewRecipient.style.opacity = '1';
+      }
+
+      document.documentElement.style.setProperty('--body-font', `'${el.fontSelect.value}', sans-serif`);
+      el.previewTitle.style.transform = `scale(${Number(el.titleSize.value) / 100})`;
       el.titleSizeValue.textContent = `${el.titleSize.value}%`;
-      el.svgStage.innerHTML = buildSvg();
+      el.ornaments.style.display = el.showDots.checked ? 'block' : 'none';
     }
 
     function fillPreset(key) {
@@ -685,9 +1097,9 @@
       el.closingInput.value = p.closing;
       el.footerInput.value = p.footer;
       el.accentSelect.value = p.accent;
-      setAccentTheme();
+      setAccent(p.accent);
       setStyle(p.style);
-      renderCard();
+      updatePreview();
     }
 
     function randomizeText() {
@@ -697,89 +1109,105 @@
       el.bodyInput.value = item.body;
       el.closingInput.value = item.closing;
       el.footerInput.value = item.footer;
-      renderCard();
+      updatePreview();
     }
 
     function resetAll() {
       fillPreset('eidfitr');
-      el.fontSelect.value = 'soft';
+      el.fontSelect.value = 'Cairo';
       el.titleSize.value = 100;
       el.showFrame.checked = true;
       el.showDots.checked = true;
       state.logo = '';
+      el.brandLogo.removeAttribute('src');
+      el.brandLogo.style.display = 'none';
       el.logoUpload.value = '';
-      renderCard();
+      updatePreview();
     }
 
-    function getSvgDataUrl() {
-      const svg = buildSvg().trim();
-      return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-    }
+    async function downloadCard() {
+      const card = el.card;
+      const canvas = await html2canvas(card, {
+        scale: 4,
+        useCORS: true,
+        backgroundColor: null,
+        logging: false
+      });
 
-    function downloadSvg() {
-      const svg = buildSvg().trim();
-      const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      const name = (el.titleInput.value || 'بطاقة-معايدة').replace(/[\\/:*?"<>|]/g, '-');
-      link.href = url;
-      link.download = `${name}.svg`;
+      const safeTitle = (el.titleInput.value || 'بطاقة-معايدة').replace(/[\\/:*?"<>|]/g, '-');
+      link.download = `${safeTitle}.png`;
+      link.href = canvas.toDataURL('image/png');
       link.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function downloadPng() {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = 1800;
-        canvas.height = 3200;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        const link = document.createElement('a');
-        const name = (el.titleInput.value || 'بطاقة-معايدة').replace(/[\\/:*?"<>|]/g, '-');
-        link.download = `${name}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      };
-      img.src = getSvgDataUrl();
     }
 
     async function copyText() {
-      const text = [el.titleInput.value, el.subtitleInput.value, el.bodyInput.value, el.recipientInput.value ? `إلى: ${el.recipientInput.value}` : '', el.closingInput.value, el.footerInput.value].filter(Boolean).join('\n');
+      const text = [
+        el.titleInput.value,
+        el.subtitleInput.value,
+        el.bodyInput.value,
+        el.recipientInput.value ? `إلى: ${el.recipientInput.value}` : '',
+        el.closingInput.value,
+        el.footerInput.value
+      ].filter(Boolean).join('\n');
+
       try {
         await navigator.clipboard.writeText(text);
         el.copyBtn.textContent = 'تم النسخ';
-        setTimeout(() => { el.copyBtn.textContent = 'انسخ النص'; }, 1200);
+        setTimeout(() => el.copyBtn.textContent = 'انسخ النص', 1200);
       } catch {
         alert('تعذر النسخ التلقائي. انسخ النص يدويًا من الحقول.');
       }
     }
 
-    el.styleChips.forEach((chip) => chip.addEventListener('click', () => setStyle(chip.dataset.style)));
-    el.presetBtns.forEach((btn) => btn.addEventListener('click', () => fillPreset(btn.dataset.preset)));
-    [el.titleInput, el.subtitleInput, el.bodyInput, el.recipientInput, el.closingInput, el.footerInput, el.fontSelect, el.accentSelect, el.titleSize, el.showFrame, el.showDots].forEach((input) => {
-      input.addEventListener('input', () => { setAccentTheme(); renderCard(); });
-      input.addEventListener('change', () => { setAccentTheme(); renderCard(); });
+    el.styleChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        setStyle(chip.dataset.style);
+      });
     });
 
-    el.logoUpload.addEventListener('change', (event) => {
-      const file = event.target.files?.[0];
+    el.presetBtns.forEach(btn => {
+      btn.addEventListener('click', () => fillPreset(btn.dataset.preset));
+    });
+
+    [
+      el.titleInput,
+      el.subtitleInput,
+      el.bodyInput,
+      el.recipientInput,
+      el.closingInput,
+      el.footerInput,
+      el.fontSelect,
+      el.titleSize,
+      el.showFrame,
+      el.showDots
+    ].forEach(input => input.addEventListener('input', updatePreview));
+
+    el.accentSelect.addEventListener('change', (e) => {
+      setAccent(e.target.value);
+      updatePreview();
+    });
+
+    el.logoUpload.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = (e) => { state.logo = e.target.result; renderCard(); };
+      reader.onload = (event) => {
+        state.logo = event.target.result;
+        el.brandLogo.src = state.logo;
+        el.brandLogo.style.display = 'block';
+      };
       reader.readAsDataURL(file);
     });
 
-    el.downloadPngBtn.addEventListener('click', downloadPng);
-    el.downloadSvgBtn.addEventListener('click', downloadSvg);
+    el.downloadBtn.addEventListener('click', downloadCard);
     el.copyBtn.addEventListener('click', copyText);
     el.resetBtn.addEventListener('click', resetAll);
     el.randomBtn.addEventListener('click', randomizeText);
 
-    setAccentTheme();
+    setAccent('gold');
     setStyle('floral');
-    renderCard();
+    updatePreview();
   </script>
 </body>
 </html>
